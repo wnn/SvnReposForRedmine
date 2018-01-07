@@ -1,0 +1,5 @@
+SHELL=/bin/bash
+PATH=/usr/local/bundle/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+GEM_HOME=/usr/local/bundle
+
+* * * * * root /usr/local/bin/reposman.rb --redmine redmine:3000 --svn-dir /var/svn --owner www-data --url http://repository/svn/ --key=YourAPIKey >> /dev/null 2>&1

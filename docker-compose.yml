@@ -1,0 +1,44 @@
+version: '3.4'
+
+networks:
+  default:
+    driver: bridge
+
+services:
+
+  redmine:
+    image: redmine
+    depends_on:
+      - db
+    ports:
+      - 8080:3000
+    environment:
+      REDMINE_DB_POSTGRES: db
+      REDMINE_DB_USERNAME: USERNAME
+      REDMINE_DB_PASSWORD: PASSWORD
+      REDMINE_DB_DATABASE: redmine
+      REDMINE_PLUGINS_MIGRATE: 1
+      REDMINE_SECRET_KEY_BASE: PASSWORD
+    volumes:
+      - ./redmine_files:/usr/src/redmine/files
+      - ./redmine_plugins:/usr/src/redmine/plugins
+
+  db:
+    image: postgres
+    volumes:
+      - ./postgresdb:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: PASSWORD
+      POSTGRES_DB: redmine
+      POSTGRES_USER: USERNAME
+
+  repository:
+    image: repository
+    depends_on:
+      - redmine
+    ports:
+      - 8088:80
+    volumes:
+      - ./Apache2.conf.d:/etc/apache2/conf.d
+      - ./svn:/var/svn
+      - ./cron.d:/etc/cron.d
